@@ -24,10 +24,10 @@ module.exports = {
 			'error',
 			'tab'
 		],
-		'linebreak-style': [
-			'error',
-			'unix'
-		],
+		// 'linebreak-style': [
+		// 	'error',
+		// 	'unix'
+		// ],
 		// 'quotes': [
 		// 	'error',
 		// 	'single'
