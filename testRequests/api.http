@@ -1,0 +1,34 @@
+get http://localhost:9000/books
+
+####
+get http://localhost:9000/books/2
+
+####
+
+post http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "title": "The Words of Radiance",
+  "author": "Brandon Sanderson",
+  "year": 2012,
+  "publisher": "Tor",
+  "description": "still awesome"
+}
+
+#####
+
+post http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "title": "The Final Empire",
+  "author": "Brandon Sanderson",
+  "year": 2006,
+  "publisher": "Tor Books",
+  "description": "Heist novel: What if the Dark Lord won?"
+}
+
+###
+
+delete http://localhost:9000/books/7

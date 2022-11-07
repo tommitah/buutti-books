@@ -18,6 +18,8 @@ module.exports = {
 		'@typescript-eslint'
 	],
 	'rules': {
+		'no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': 'off',
 		'indent': [
 			'error',
 			'tab'
@@ -26,10 +28,10 @@ module.exports = {
 			'error',
 			'unix'
 		],
-		'quotes': [
-			'error',
-			'single'
-		],
+		// 'quotes': [
+		// 	'error',
+		// 	'single'
+		// ],
 		'semi': [
 			'error',
 			'always'
