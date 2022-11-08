@@ -1,5 +1,7 @@
 import express from 'express';
 import books from '../services/books';
+import { Book, SafeRequest, SqlParams } from '../types/types';
+import { check, validationResult } from 'express-validator';
 
 const bookRouter = express.Router();
 
@@ -8,8 +10,6 @@ const bookRouter = express.Router();
 
 // TODO:
 // types for rows?
-// TODO:
-// error validation for books service!
 bookRouter.get('/', async (_req, res) => {
 	const allBooks = await books.getAll();
 	res.status(200).json(allBooks);
@@ -22,37 +22,32 @@ bookRouter.get('/:id', async (req, res) => {
 	res.status(200).json(bookById);
 });
 
-bookRouter.post('/', async (req, res) => {
-	// NOTE: had to disable the implicit return rule for the compiler
-	const body = req.body;
+bookRouter.post('/',
+	check('title').notEmpty(),
+	check('author').notEmpty(),
+	check('year').isNumeric().toInt(), // checks that the string only contains numbers and converts it
+	check('publisher').notEmpty()
+	, async (req: SafeRequest<Book>, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return res.status(400).json({ errors: errors.array() });
 
-	// TODO:
-	// is there a way to make the type checks etc a bit more typescripty?
-	if (!body.title || body.title === ''
-		|| !body.author || body.author === ''
-		|| !body.year || body.publisher === '')
-		return res.status(400).json({ error: 'book must have a title, author and year' });
+		// TODO: Validation for duplicate books as well
 
-	if (typeof body.year !== 'number')
-		return res.status(400).json({ error: 'year must be a number' });
+		const bookParams: SqlParams = [
+			req.body.title,
+			req.body.author,
+			req.body.year,
+			req.body.publisher,
+			req.body.description
+		];
 
-	// TODO: Validation for duplicate books as well
-
-	// TODO: ts type/interface for this? Could return an array still?
-	const book = [
-		body.title,
-		body.author,
-		body.year,
-		body.publisher,
-		body.description
-	];
-
-	const bookToAdd = await books.create(book);
-	res.status(200).json(bookToAdd);
-});
+		const bookToAdd = await books.create(bookParams);
+		res.status(200).json({ id: bookToAdd.lastID });
+	});
 
 bookRouter.delete('/:id', async (req, res) => {
-	// TODO: input validation
+	// TODO: input validation?
 	await books.remove(Number(req.params.id));
 	res.status(200).json({ removed: true });
 });
