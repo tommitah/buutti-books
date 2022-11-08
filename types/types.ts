@@ -14,6 +14,21 @@ export interface SafeRequest<T> extends Request {
 	body: T
 }
 
+// export class CustomError implements Error {
+// 	constructor(message: string) {
+// 		super(message);
+// 		Object.setPrototypeOf(this, CustomError.prototype);
+// 	}
+// }
 
+export class CustomError {
+	msg!: string;
+	statusCode!: number;
+
+	constructor(msg: string, statusCode: number = 500) {
+		this.msg = msg;
+		this.statusCode = statusCode;
+	}
+}
 
 

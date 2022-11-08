@@ -1,7 +1,7 @@
 get http://localhost:9000/books
 
 ####
-get http://localhost:9000/books/4
+get http://localhost:9000/books/1
 
 ####
 
@@ -14,6 +14,17 @@ Content-Type: application/json
   "year": 2012,
   "publisher": "Tor",
   "description": "still awesome"
+}
+#####
+post http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "title": "The Way of Kings",
+  "author": "Brandon Sanderson",
+  "year": 2010,
+  "publisher": "Tor",
+  "description": "GOAT"
 }
 
 #####
@@ -31,4 +42,4 @@ Content-Type: application/json
 
 ###
 
-delete http://localhost:9000/books/7
+delete http://localhost:9000/books/3

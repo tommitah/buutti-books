@@ -1,6 +1,6 @@
 import express from 'express';
 import books from '../services/books';
-import { Book, SafeRequest, SqlParams } from '../types/types';
+import { Book, CustomError, SafeRequest, SqlParams } from '../types/types';
 import { check, validationResult } from 'express-validator';
 
 const bookRouter = express.Router();
@@ -22,6 +22,7 @@ bookRouter.get('/:id', async (req, res) => {
 	res.status(200).json(bookById);
 });
 
+// This is stupidly overengineered imo
 bookRouter.post('/',
 	check('title').notEmpty(),
 	check('author').notEmpty(),
@@ -29,8 +30,10 @@ bookRouter.post('/',
 	check('publisher').notEmpty()
 	, async (req: SafeRequest<Book>, res) => {
 		const errors = validationResult(req);
-		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array() });
+		if (!errors.isEmpty()) {
+			const error = errors.array().map(err => err.msg).pop();
+			throw new CustomError(error, 400);
+		}
 
 		// TODO: Validation for duplicate books as well
 
@@ -48,10 +51,6 @@ bookRouter.post('/',
 
 bookRouter.delete('/:id', async (req, res) => {
 	// TODO: input validation?
-
-	if (typeof req.params.id !== 'number')
-		return res.status(404).json();
-
 	await books.remove([Number(req.params.id)]);
 	res.status(204).send();
 });

@@ -12,5 +12,6 @@ app.get('/', (_req, res) => res.status(200).json({ success: true }));
 
 app.use('/books', bookRouter);
 
+app.use(middleware.errorHandler);
 
 export default app;
