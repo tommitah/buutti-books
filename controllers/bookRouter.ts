@@ -18,7 +18,7 @@ bookRouter.get('/', async (_req, res) => {
 bookRouter.get('/:id', async (req, res) => {
 	// TODO:
 	// input validation, error handling should be working
-	const bookById = await books.findById(Number(req.params.id));
+	const bookById = await books.findById([Number(req.params.id)]);
 	res.status(200).json(bookById);
 });
 
@@ -48,8 +48,12 @@ bookRouter.post('/',
 
 bookRouter.delete('/:id', async (req, res) => {
 	// TODO: input validation?
-	await books.remove(Number(req.params.id));
-	res.status(200).json({ removed: true });
+
+	if (typeof req.params.id !== 'number')
+		return res.status(404).json();
+
+	await books.remove([Number(req.params.id)]);
+	res.status(204).send();
 });
 
 export default bookRouter;
