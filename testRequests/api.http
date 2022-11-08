@@ -4,6 +4,15 @@ get http://localhost:9000/books
 get http://localhost:9000/books/1
 
 ####
+get http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "year": 2010,
+  "author": "Brandon Sanderson"
+}
+
+####
 
 post http://localhost:9000/books
 Content-Type: application/json
@@ -38,6 +47,18 @@ Content-Type: application/json
   "year": 2006,
   "publisher": "Tor Books",
   "description": "Heist novel: What if the Dark Lord won?"
+}
+
+###
+post http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "title": "Harry Potter and the Philosophers Stone",
+  "author": "J.K. Rowling",
+  "year": 1997,
+  "publisher": "Bloomsbury (UK)",
+  "description": "A book about a wizard boy"
 }
 
 ###

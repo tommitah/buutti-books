@@ -1,7 +1,9 @@
-import express from 'express';
+import express, { Response } from 'express';
 import books from '../services/books';
-import { Book, CustomError, SafeRequest, SqlParams } from '../types/types';
-import { check, validationResult } from 'express-validator';
+import { Book, RouteError, RequestBody, SqlParams } from '../types/types';
+import { validationResult } from 'express-validator';
+import { checkDuplicates } from '../utils/functions';
+import { getValidationChain, postValidationChain } from '../utils/middleware';
 
 const bookRouter = express.Router();
 
@@ -10,44 +12,47 @@ const bookRouter = express.Router();
 
 // TODO:
 // types for rows?
-bookRouter.get('/', async (_req, res) => {
-	const allBooks = await books.getAll();
+bookRouter.get('/', getValidationChain, async (req: RequestBody<Book>, res: Response) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty())
+		throw new RouteError('Oops, looks like you provided bad input!', errors.mapped(), 400);
+
+	let allBooks;
+	if (!req.body.author && !req.body.year && !req.body.publisher)
+		allBooks = await books.getAll();
+	else {
+		const searchParams: SqlParams = [req.body.author, req.body.year, req.body.publisher];
+		allBooks = await books.searchAll(searchParams);
+	}
 	res.status(200).json(allBooks);
 });
 
 bookRouter.get('/:id', async (req, res) => {
 	// TODO:
-	// input validation, error handling should be working
+	// input validation
 	const bookById = await books.findById([Number(req.params.id)]);
 	res.status(200).json(bookById);
 });
 
-// This is stupidly overengineered imo
-bookRouter.post('/',
-	check('title').notEmpty(),
-	check('author').notEmpty(),
-	check('year').isNumeric().toInt(), // checks that the string only contains numbers and converts it
-	check('publisher').notEmpty()
-	, async (req: SafeRequest<Book>, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			const error = errors.array().map(err => err.msg).pop();
-			throw new CustomError(error, 400);
-		}
+bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Response) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty())
+		throw new RouteError('Oops, looks like you provided bad input!', errors.mapped(), 400);
 
-		// TODO: Validation for duplicate books as well
+	if (checkDuplicates(await books.getAll(), req).length !== 0)
+		throw new RouteError('Oops, looks like this entry already exists!', {}, 400);
 
-		const bookParams: SqlParams = [
-			req.body.title,
-			req.body.author,
-			req.body.year,
-			req.body.publisher,
-			req.body.description
-		];
+	const bookParams: SqlParams = [
+		req.body.title,
+		req.body.author,
+		req.body.year,
+		req.body.publisher,
+		req.body.description
+	];
 
-		const bookToAdd = await books.create(bookParams);
-		res.status(200).json({ id: bookToAdd.lastID });
-	});
+	const bookToAdd = await books.create(bookParams);
+	res.status(200).json({ id: bookToAdd.lastID });
+});
 
 bookRouter.delete('/:id', async (req, res) => {
 	// TODO: input validation?

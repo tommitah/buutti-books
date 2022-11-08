@@ -1,6 +1,9 @@
 import { Request } from 'express';
+import { ValidationError } from 'express-validator';
 
 export type SqlParams = Array<string | number>
+
+export type RequestBody<T> = Request<{}, {}, T>;
 
 export interface Book {
 	title: string,
@@ -10,23 +13,14 @@ export interface Book {
 	description: string
 }
 
-export interface SafeRequest<T> extends Request {
-	body: T
-}
-
-// export class CustomError implements Error {
-// 	constructor(message: string) {
-// 		super(message);
-// 		Object.setPrototypeOf(this, CustomError.prototype);
-// 	}
-// }
-
-export class CustomError {
+export class RouteError {
 	msg!: string;
+	record!: Record<string, ValidationError>;
 	statusCode!: number;
 
-	constructor(msg: string, statusCode: number = 500) {
+	constructor(msg: string, record: Record<string, ValidationError> = {}, statusCode = 500) {
 		this.msg = msg;
+		this.record = record;
 		this.statusCode = statusCode;
 	}
 }
