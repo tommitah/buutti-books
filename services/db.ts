@@ -13,8 +13,6 @@ const queryAll = async (sql: string, params?: SqlParams) => {
 	return await db.all(sql, params);
 };
 
-// TODO:
-// This should return a row if possible, now the .get('/:id') doesn't work
 const queryOperate = async (sql: string, params: SqlParams) => {
 	const db = await dbPromise;
 	return await db.run(sql, params);

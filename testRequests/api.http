@@ -1,7 +1,7 @@
 get http://localhost:9000/books
 
 ####
-get http://localhost:9000/books/1
+get http://localhost:9000/books/"1"
 
 ####
 get http://localhost:9000/books
@@ -21,6 +21,16 @@ Content-Type: application/json
   "author": "Various",
   "year": -165,
   "description": "A holy book of Christianity and Jewish faith"
+}
+####
+post http://localhost:9000/books
+Content-Type: application/json
+{
+  "title": "drop table books",
+  "author": "drop table books",
+  "year": 0,
+  "publisher": "drop table books",
+  "description": "drop table books"
 }
 ####
 
@@ -73,4 +83,4 @@ Content-Type: application/json
 
 ###
 
-delete http://localhost:9000/books/3
+delete http://localhost:9000/books/6

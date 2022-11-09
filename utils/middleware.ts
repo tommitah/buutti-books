@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import { RouteError } from '../types/types';
 
 const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
@@ -21,9 +21,6 @@ const errorHandler = (
 		error = new Error('no separate error implemented for this situation!');
 	}
 
-	// no idea why the || 500 is needed and not just inferred
-	// console.log(error);
-	// console.log((error as RouteError).statusCode);
 	res.status((error as RouteError).statusCode).json(error);
 };
 
@@ -46,10 +43,10 @@ export const getValidationChain = [
 	),
 ];
 
-// TODO?: it's possible to ping the db from here so we could check duplicates here as well
-// Somethings wrong with the validation now
-// The issue is reported in the middleware
-// My idea was to check whether the fields exist in validation since some of them are optional
+export const idValidationChain = [
+	param('id').exists().isInt()
+];
+
 export const postValidationChain = [
 	body('title').exists().isString().notEmpty(),
 	body('author').exists().isString().notEmpty(),

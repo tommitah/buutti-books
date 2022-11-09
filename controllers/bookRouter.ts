@@ -1,17 +1,12 @@
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 import books from '../services/books';
 import { Book, RouteError, RequestBody, SqlParams } from '../types/types';
 import { validationResult } from 'express-validator';
 import { checkDuplicates } from '../utils/functions';
-import { getValidationChain, postValidationChain } from '../utils/middleware';
+import { getValidationChain, idValidationChain, postValidationChain } from '../utils/middleware';
 
 const bookRouter = express.Router();
 
-// TODO: 
-// Verify all the status codes and response formats are correct per spec
-
-// TODO:
-// types for rows?
 bookRouter.get('/', getValidationChain, async (req: RequestBody<Book>, res: Response) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty())
@@ -27,9 +22,11 @@ bookRouter.get('/', getValidationChain, async (req: RequestBody<Book>, res: Resp
 	res.status(200).json(allBooks);
 });
 
-bookRouter.get('/:id', async (req, res) => {
-	// TODO:
-	// input validation
+bookRouter.get('/:id', idValidationChain, async (req: Request, res: Response) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty())
+		throw new RouteError('Oops, looks like you provided a funky id!', errors.mapped(), 404);
+
 	const bookById = await books.findById([Number(req.params.id)]);
 	res.status(200).json(bookById);
 });
@@ -39,11 +36,11 @@ bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Re
 	if (!errors.isEmpty())
 		throw new RouteError('Oops, looks like you provided bad input!', errors.mapped(), 400);
 
-	if (checkDuplicates(await books.getAll(), req).length !== 0)
+	// This could be done in the middleware as well
+	const allBooks = await books.getAll();
+	if (checkDuplicates(allBooks, req).length !== 0)
 		throw new RouteError('Oops, looks like this entry already exists!', {}, 400);
 
-	// TODO: Still has to check for null fields, some are optional
-	// we could check if they exist in the middleware.
 	const bookParams: SqlParams = [
 		req.body.title,
 		req.body.author,
@@ -56,8 +53,11 @@ bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Re
 	res.status(200).json({ id: bookToAdd.lastID });
 });
 
-bookRouter.delete('/:id', async (req, res) => {
-	// TODO: input validation?
+bookRouter.delete('/:id', idValidationChain, async (req: Request, res: Response) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty())
+		throw new RouteError('Oops, looks like you provided a funky id!', errors.mapped(), 404);
+
 	await books.remove([Number(req.params.id)]);
 	res.status(204).send();
 });

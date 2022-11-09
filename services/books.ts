@@ -1,17 +1,13 @@
 // This is a module for serving data from the database to the router
 import db from '../services/db';
 import { SqlParams } from '../types/types';
+import { buildSearchQuery } from '../utils/functions';
 
 const getAll = async () => await db.queryAll(`select * from books`);
 
-// TODO: Figure out how to use sql with null checks(?)
-// We could snip the SQL into parts, this way the ending would always start with 'where'
-// meaning we could get rid of getAll?
 const searchAll = async (search: SqlParams) => {
-	const trimmedParams = search.filter(param => param !== undefined);
-	console.log('trim', trimmedParams);
-
-	const sql = `select * from books where author = ? or year = ? or publisher = ?`;
+	// View with an empty stomach....
+	const sql = buildSearchQuery(search);
 	return await db.queryAll(sql, search);
 };
 
