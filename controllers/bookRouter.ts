@@ -42,6 +42,8 @@ bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Re
 	if (checkDuplicates(await books.getAll(), req).length !== 0)
 		throw new RouteError('Oops, looks like this entry already exists!', {}, 400);
 
+	// TODO: Still has to check for null fields, some are optional
+	// we could check if they exist in the middleware.
 	const bookParams: SqlParams = [
 		req.body.title,
 		req.body.author,

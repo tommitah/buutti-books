@@ -21,10 +21,8 @@ module.exports = {
 		'no-unused-vars': 'off',
 		'@typescript-eslint/no-unused-vars': 'off',
 		'@typescript-eslint/ban-types': 'off',
-		'indent': [
-			'error',
-			'tab'
-		],
+		'indent': 'off',
+		'@typescript-eslint/indent': ["error"],
 		// 'linebreak-style': [
 		// 	'error',
 		// 	'unix'

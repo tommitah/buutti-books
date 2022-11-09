@@ -13,6 +13,16 @@ Content-Type: application/json
 }
 
 ####
+post http://localhost:9000/books
+Content-Type: application/json
+
+{
+  "title": "Old Testament",
+  "author": "Various",
+  "year": -165,
+  "description": "A holy book of Christianity and Jewish faith"
+}
+####
 
 post http://localhost:9000/books
 Content-Type: application/json
