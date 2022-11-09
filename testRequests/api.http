@@ -41,7 +41,7 @@ Content-Type: application/json
 {
   "title": "The Words of Radiance",
   "author": "Brandon Sanderson",
-  "year": 2012,
+  "year": 2014,
   "publisher": "Tor Books",
   "description": "still awesome"
 }
@@ -50,11 +50,11 @@ post http://localhost:9000/books
 Content-Type: application/json
 
 {
-  "title": "The Way of Kings",
+  "title": "Oathbringer",
   "author": "Brandon Sanderson",
-  "year": 2010,
-  "publisher": "Tor",
-  "description": "GOAT"
+  "year": 2017,
+  "publisher": "Tor Books",
+  "description": "!!!"
 }
 
 #####
@@ -65,7 +65,7 @@ Content-Type: application/json
 {
   "title": "The Well of Ascension",
   "author": "Brandon Sanderson",
-  "year": 2008,
+  "year": 2007,
   "publisher": "Tor Books",
   "description": "Politics in a new world"
 }
