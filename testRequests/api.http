@@ -25,12 +25,13 @@ Content-Type: application/json
 ####
 post http://localhost:9000/books
 Content-Type: application/json
+
 {
-  "title": "drop table books",
-  "author": "drop table books",
-  "year": 0,
-  "publisher": "drop table books",
-  "description": "drop table books"
+  "title": "The Way of Kings",
+  "author": "Brandon Sanderson",
+  "year": 2010,
+  "publisher": "Tor Books",
+  "description": "GOAT"
 }
 ####
 
@@ -41,7 +42,7 @@ Content-Type: application/json
   "title": "The Words of Radiance",
   "author": "Brandon Sanderson",
   "year": 2012,
-  "publisher": "Tor",
+  "publisher": "Tor Books",
   "description": "still awesome"
 }
 #####
@@ -62,11 +63,11 @@ post http://localhost:9000/books
 Content-Type: application/json
 
 {
-  "title": "The Final Empire",
+  "title": "The Well of Ascension",
   "author": "Brandon Sanderson",
-  "year": 2006,
+  "year": 2008,
   "publisher": "Tor Books",
-  "description": "Heist novel: What if the Dark Lord won?"
+  "description": "Politics in a new world"
 }
 
 ###

@@ -3,7 +3,7 @@ create table books (
 	id integer PRIMARY KEY,
 	title text not null,
 	author text not null,
-	year integer not null default 9999,
+	year integer not null,
 	publisher text,
 	description text 
 );
