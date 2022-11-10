@@ -11,13 +11,13 @@ const searchAll = async (search: SqlParams) => {
 	return await db.queryAll(sql, search);
 };
 
-const findById = async (id: SqlParams) => await db.queryRow(`select * from books where id = ?`, id);
+const findById = async (id: SqlParams) => await db.queryGet(`select * from books where id = ?`, id);
 
-const remove = async (id: SqlParams) => await db.queryOperate(`delete from books where id = ?`, id);
+const remove = async (id: SqlParams) => await db.queryRun(`delete from books where id = ?`, id);
 
 const create = async (book: SqlParams) => {
 	const sql = `insert into books(title,author,year,publisher,description) values (?,?,?,?,?)`;
-	return await db.queryOperate(sql, book);
+	return await db.queryRun(sql, book);
 };
 
 export default {

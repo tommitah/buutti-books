@@ -13,18 +13,18 @@ const queryAll = async (sql: string, params?: SqlParams) => {
 	return await db.all(sql, params);
 };
 
-const queryOperate = async (sql: string, params: SqlParams) => {
+const queryRun = async (sql: string, params: SqlParams) => {
 	const db = await dbPromise();
 	return await db.run(sql, params);
 };
 
-const queryRow = async (sql: string, params: SqlParams) => {
+const queryGet = async (sql: string, params: SqlParams) => {
 	const db = await dbPromise();
 	return await db.get(sql, params);
 };
 
 export default {
 	queryAll,
-	queryOperate,
-	queryRow,
+	queryRun,
+	queryGet,
 };
