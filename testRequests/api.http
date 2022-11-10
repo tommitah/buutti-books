@@ -1,7 +1,7 @@
 get http://localhost:9000/books
 
 ####
-get http://localhost:9000/books/"1"
+get http://localhost:9000/books/1
 
 ####
 get http://localhost:9000/books
@@ -11,7 +11,16 @@ Content-Type: application/json
   "year": 2010,
   "author": "Brandon Sanderson"
 }
+####
+post http://localhost:9000/books
+Content-Type: application/json
 
+{
+  "title": "The Eye of The World",
+  "author": "Robert Jordan",
+  "year": 1993,
+  "description": "epic fantasy"
+}
 ####
 post http://localhost:9000/books
 Content-Type: application/json
@@ -84,4 +93,4 @@ Content-Type: application/json
 
 ###
 
-delete http://localhost:9000/books/6
+delete http://localhost:9000/books/1

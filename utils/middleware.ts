@@ -51,7 +51,6 @@ export const idValidationChain = [
 ];
 
 export const postValidationChain = [
-	body().isJSON(),
 	body('title').exists().isString().notEmpty(),
 	body('author').exists().isString().notEmpty(),
 	body('year').exists().not().isString().isInt(),
