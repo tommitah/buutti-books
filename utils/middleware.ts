@@ -11,15 +11,18 @@ const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
 };
 
 const errorHandler = (
-	err: TypeError | RouteError,
+	err: TypeError | SyntaxError | RouteError,
 	_req: Request,
 	res: Response,
 	_next: NextFunction
 ) => {
 	let error = err;
-	if (!(err instanceof RouteError)) {
+
+	if (err instanceof SyntaxError)
+		error = new RouteError('Your format is not valid JSON.', {}, 400);
+	else if (!(err instanceof RouteError))
 		error = new Error('no separate error implemented for this situation!');
-	}
+	
 
 	res.status((error as RouteError).statusCode).json(error);
 };
@@ -48,6 +51,7 @@ export const idValidationChain = [
 ];
 
 export const postValidationChain = [
+	body().isJSON(),
 	body('title').exists().isString().notEmpty(),
 	body('author').exists().isString().notEmpty(),
 	body('year').exists().not().isString().isInt(),

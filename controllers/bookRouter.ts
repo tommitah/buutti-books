@@ -28,10 +28,14 @@ bookRouter.get('/:id', idValidationChain, async (req: Request, res: Response) =>
 		throw new RouteError('Oops, looks like you provided a funky id!', errors.mapped(), 404);
 
 	const bookById = await books.findById([Number(req.params.id)]);
+	if (!bookById)
+		throw new RouteError('Oops, looks like you searched for a non-existing book!', {}, 404);
+
 	res.status(200).json(bookById);
 });
 
 bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Response) => {
+	console.log(req.body);
 	const errors = validationResult(req);
 	if (!errors.isEmpty())
 		throw new RouteError('Oops, looks like you provided bad input!', errors.mapped(), 400);
@@ -57,6 +61,9 @@ bookRouter.delete('/:id', idValidationChain, async (req: Request, res: Response)
 	const errors = validationResult(req);
 	if (!errors.isEmpty())
 		throw new RouteError('Oops, looks like you provided a funky id!', errors.mapped(), 404);
+
+	const book = await books.findById([Number(req.params.id)]);
+	if (!book) throw new RouteError('Oops, looks like you tried to delete a non-existing entry!', {}, 404);
 
 	await books.remove([Number(req.params.id)]);
 	res.status(204).send();
