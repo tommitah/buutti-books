@@ -35,7 +35,6 @@ bookRouter.get('/:id', idValidationChain, async (req: Request, res: Response) =>
 });
 
 bookRouter.post('/', postValidationChain, async (req: RequestBody<Book>, res: Response) => {
-	console.log(req.body);
 	const errors = validationResult(req);
 	if (!errors.isEmpty())
 		throw new RouteError('Oops, looks like you provided bad input!', errors.mapped(), 400);
