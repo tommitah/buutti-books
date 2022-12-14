@@ -25,4 +25,8 @@ export class RouteError {
 	}
 }
 
-
+export interface RouteErrorStruct {
+	msg: string,
+	record: Record<string, ValidationError> | {},
+	statusCode: number | 500
+}

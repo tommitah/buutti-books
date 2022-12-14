@@ -14,7 +14,7 @@ bookRouter.get('/', getValidationChain, async (req: RequestBody<Book>, res: Resp
 
 	let allBooks;
 	if (!req.body.author && !req.body.year && !req.body.publisher)
-		allBooks = await books.getAll();
+		allBooks = await books.getAll()
 	else {
 		const searchParams: SqlParams = [req.body.author, req.body.year, req.body.publisher];
 		allBooks = await books.searchAll(searchParams);

@@ -105,3 +105,5 @@ dist
 
 # tsconfig for tsserver
 tsconfig.json
+
+.elasticbeanstalk/
